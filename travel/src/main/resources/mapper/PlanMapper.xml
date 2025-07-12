@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.travel.mapper.PlanMapper">
+
+  <select id="getPlanByUserNo" resultType="Plan">
+    SELECT * FROM plan WHERE user_no = #{userNo}
+  </select>
+
+  <insert id="insertPlan">
+    INSERT INTO plan (title, start_date, end_date, reg_date, user_no)
+    VALUES (#{title}, #{startDate}, #{endDate}, now(), #{userNo})
+  </insert>
+  
+  <update id="updatePlan">
+  	UPDATE plan SET title= #{title}, start_date= #{startDate}, end_date= #{endDate} WHERE no= #{planNo}
+  </update>
+  
+  <delete id="deletePlan">
+  	DELETE FROM plan WHERE no= #{planNo}
+  </delete>
+
+</mapper>
+
