@@ -22,7 +22,8 @@ public class PlanController {
 		this.planservice = planservice;
 	}
 	
-	@GetMapping("/user/{userNo}")
+	// user 번호 가져오는 방법 좀 바꿔야 할듯
+	@GetMapping("/{userNo}")
 	public List<Plan> getPlanByUser(@PathVariable int userNo) {
 		return planservice.getPlanByUser(userNo);
 	}

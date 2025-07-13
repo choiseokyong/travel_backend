@@ -8,10 +8,6 @@ import com.travel.domain.Plan;
 
 @Mapper
 public interface PlanMapper {
-	// 회원가입
-	
-	// 회원정보 조회
-	
 	// plan 등록
 	public int insertPlan(Plan plan);
 	
