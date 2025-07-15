@@ -10,6 +10,7 @@ public class PlanItem {
 	private int planSort;
 	private String regDate;
 	private int planNo; // plan 번호
+	
 	public int getNo() {
 		return no;
 	}

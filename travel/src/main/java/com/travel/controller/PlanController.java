@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.travel.domain.Plan;
+import com.travel.domain.PlanResponseDTO;
 import com.travel.service.PlanService;
 
 
@@ -29,18 +30,24 @@ public class PlanController {
 	}
 	
 	@PostMapping("/form")
-    public int createPlan(@RequestBody Plan plan) {
-        return planservice.createPlan(plan);
+    public int createPlan(@RequestBody PlanResponseDTO planresponsedto) {
+        return planservice.createPlan(planresponsedto);
     }
 	
 	@GetMapping("/modify/{no}")
-	public int modifyNo(@PathVariable int planNo) {
-		return planservice.modifyPlan(planNo);
+	public int modifyNo(@RequestBody PlanResponseDTO planresponsedto) {
+		return planservice.modifyPlan(planresponsedto);
 	}
 	
+	// plan 삭제
 	@GetMapping("/delete/{no}")
 	public int deleteNo(@PathVariable int planNo) {
 		return planservice.deletePlan(planNo);
+	}
+	
+	@GetMapping("/delete/item/{no}")
+	public int deleteItemNo(@PathVariable int planItemNo) {
+		return planservice.deletePlanItem(planItemNo);
 	}
 	
 }
