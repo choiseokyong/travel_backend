@@ -3,7 +3,7 @@ package com.travel.domain;
 import java.util.List;
 
 public class PlanResponseDTO {
-	private int no;
+	private Integer no;
 	private String title;
 	private String startDate;
 	private String endDate;
@@ -11,10 +11,10 @@ public class PlanResponseDTO {
 	private int userNo; // 유저번호
 	private List<PlanItem> item;
 	
-	public int getNo() {
+	public Integer getNo() {
 		return no;
 	}
-	public void setNo(int no) {
+	public void setNo(Integer no) {
 		this.no = no;
 	}
 	public String getTitle() {

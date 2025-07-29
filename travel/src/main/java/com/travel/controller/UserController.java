@@ -36,12 +36,12 @@ public class UserController {
         return userservice.createUser(user);
     }
 	
-	@GetMapping("/modify/{no}")
-	public int modifyNo(@PathVariable int userNo) {
-		return userservice.modifyUser(userNo);
+	@GetMapping("/modify")
+	public int modifyNo(@RequestBody User user) {
+		return userservice.modifyUser(user);
 	}
 	
-	@GetMapping("/delete/{no}")
+	@GetMapping("/delete/{userNo}")
 	public int deleteNo(@PathVariable int userNo) {
 		return userservice.deleteUser(userNo);
 	}

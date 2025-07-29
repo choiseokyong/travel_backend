@@ -8,8 +8,11 @@
   <select id="getPlanByUserNo" resultType="Plan">
     SELECT * FROM plan WHERE user_no = #{userNo}
   </select>
+  <select id="getPlanItemByUserNo" resultType="PlanItem">
+    SELECT * FROM planitem WHERE no = #{no}
+  </select>
 
-  <insert id="insertPlan">
+  <insert id="insertPlan" useGeneratedKeys="true" keyProperty="no">
     INSERT INTO plan (title, start_date, end_date, reg_date, user_no)
     VALUES (#{title}, #{startDate}, #{endDate}, now(), #{userNo})
   </insert>
@@ -19,7 +22,7 @@
   </insert>
   
   <update id="updatePlan">
-  	UPDATE plan SET title= #{title}, start_date= #{startDate}, end_date= #{endDate} WHERE no= #{planNo}
+  	UPDATE plan SET title= #{title}, start_date= #{startDate}, end_date= #{endDate} WHERE no= #{no}
   </update>
   <update id="updatePlanItem">
   	UPDATE planItem SET plan_date= #{planDate}, place= #{place}, lat= #{lat}, lng= #{lng}, memo= #{memo}, plan_sort= #{planSort} WHERE no= #{no} AND plan_no= #{planNo}

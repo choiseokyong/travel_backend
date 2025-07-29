@@ -10,7 +10,7 @@
   </select>
   
   <select id="getUserByUserNo" resultType="User">
-    SELECT * FROM user WHERE user_no = #{userNo}
+    SELECT * FROM user WHERE no = #{userNo}
   </select>
 
   <insert id="insertUser">
@@ -19,7 +19,7 @@
   </insert>
   
   <update id="updateUser">
-  	UPDATE user SET name= #{name}, email= #{email}, password= #{passWord} WHERE no= #{userNo}
+  	UPDATE user SET name= #{name}, email= #{email}, password= #{passWord} WHERE no= #{no}
   </update>
   
   <delete id="deleteUser">

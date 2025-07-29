@@ -2,16 +2,16 @@ package com.travel.domain;
 
 public class User {
 
-	private int no;
+	private Integer no;
 	private String name;
 	private String email;
 	private String passWord;
 	private String regDate;
 	
-	public int getNo() {
+	public Integer getNo() {
 		return no;
 	}
-	public void setNo(int no) {
+	public void setNo(Integer no) {
 		this.no = no;
 	}
 	public String getName() {

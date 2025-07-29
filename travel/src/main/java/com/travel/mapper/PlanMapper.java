@@ -18,8 +18,11 @@ public interface PlanMapper {
 	// plan 조회
 	public List<Plan> getPlanByUserNo(int userNo);
 	
+	// planItem 조회
+	public boolean getPlanItemByUserNo(int no);
+	
 	// plan 수정
-	public int updatePlan(int planNo);
+	public int updatePlan(Plan plan);
 	
 	// planItem 수정
 	public int updatePlanItem(PlanItem planitem);
@@ -28,5 +31,5 @@ public interface PlanMapper {
 	public int deletePlan(int planNo);
 	
 	// planItem 삭제
-		public int deletePlanItem(int planItemNo);
+	public int deletePlanItem(int planItemNo);
 }

@@ -18,7 +18,7 @@ public interface UserMapper {
 	public List<User> getUserByUserNo(int userNo);
 	
 	// 회원수정
-	public int updateUser(int userNo);
+	public int updateUser(User user);
 	
 	// 회원삭제
 	public int deleteUser(int userNo);

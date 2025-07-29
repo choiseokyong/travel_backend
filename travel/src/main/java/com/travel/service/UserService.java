@@ -28,8 +28,8 @@ public class UserService {
 		return usermapper.insertUser(user);
 	}
 	
-	public int modifyUser(int userNo) {
-		return usermapper.updateUser(userNo);
+	public int modifyUser(User user) {
+		return usermapper.updateUser(user);
 	}
 	
 	public int deleteUser(int userNo) {

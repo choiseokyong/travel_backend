@@ -23,29 +23,32 @@ public class PlanController {
 		this.planservice = planservice;
 	}
 	
-	// user 번호 가져오는 방법 좀 바꿔야 할듯
+	// plan,planitem 조인 쿼리 해야함.
 	@GetMapping("/{userNo}")
 	public List<Plan> getPlanByUser(@PathVariable int userNo) {
 		return planservice.getPlanByUser(userNo);
 	}
 	
+	// plan,item 등록
 	@PostMapping("/form")
     public int createPlan(@RequestBody PlanResponseDTO planresponsedto) {
         return planservice.createPlan(planresponsedto);
     }
 	
-	@GetMapping("/modify/{no}")
+	// plan,item 수정
+	@GetMapping("/modify")
 	public int modifyNo(@RequestBody PlanResponseDTO planresponsedto) {
 		return planservice.modifyPlan(planresponsedto);
 	}
 	
 	// plan 삭제
-	@GetMapping("/delete/{no}")
+	@GetMapping("/delete/{planNo}")
 	public int deleteNo(@PathVariable int planNo) {
 		return planservice.deletePlan(planNo);
 	}
 	
-	@GetMapping("/delete/item/{no}")
+	// planitem 삭제
+	@GetMapping("/delete/item/{planItemNo}")
 	public int deleteItemNo(@PathVariable int planItemNo) {
 		return planservice.deletePlanItem(planItemNo);
 	}

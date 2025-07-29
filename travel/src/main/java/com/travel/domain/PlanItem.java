@@ -1,7 +1,7 @@
 package com.travel.domain;
 
 public class PlanItem {
-	private int no;
+	private Integer no;
 	private String planDate;
 	private String place;
 	private int lat;
@@ -11,10 +11,10 @@ public class PlanItem {
 	private String regDate;
 	private int planNo; // plan 번호
 	
-	public int getNo() {
+	public Integer getNo() {
 		return no;
 	}
-	public void setNo(int no) {
+	public void setNo(Integer no) {
 		this.no = no;
 	}
 	public String getPlanDate() {

@@ -1,16 +1,16 @@
 package com.travel.domain;
 
 public class Plan {
-	private int no;
+	private Integer no;
 	private String title;
 	private String startDate;
 	private String endDate;
 	private String regDate;
 	private int userNo; // 유저번호
-	public int getNo() {
+	public Integer getNo() {
 		return no;
 	}
-	public void setNo(int no) {
+	public void setNo(Integer no) {
 		this.no = no;
 	}
 	public String getTitle() {

@@ -36,13 +36,20 @@ public class PlanService {
 		
 	}
 	
-	// planitem 수정, 삭제 관련... 어찌??
+	// plan
 	public int modifyPlan(PlanResponseDTO planresponsedto) {
 		Plan plan = toPlan(planresponsedto);
-		flag = planmapper.updatePlan(plan.getNo());
-		
+		flag = planmapper.updatePlan(plan);
 		for(PlanItem item : planresponsedto.getItem()) {
-			planmapper.updatePlanItem(toPlanItem(item,plan.getNo()));
+			// planitem 있는지 없는지 확인해서 수정 또는 등록 되게 작업 필요.
+			System.out.println("번호==== " + item.getNo());
+			if(item.getNo() != null) {
+				planmapper.updatePlanItem(toPlanItem(item,plan.getNo()));
+			}else {
+				
+				planmapper.insertPlanItem(toPlanItem(item,plan.getNo()));
+			}
+			
 		}
 		
 		return flag;
@@ -60,6 +67,7 @@ public class PlanService {
 	
 	private Plan toPlan(PlanResponseDTO planresponsedto) {
 		Plan plan = new Plan();
+		plan.setNo(planresponsedto.getNo());
 		plan.setTitle(planresponsedto.getTitle());
 		plan.setStartDate(planresponsedto.getStartDate());
 		plan.setEndDate(planresponsedto.getEndDate());
@@ -70,6 +78,7 @@ public class PlanService {
 	
 	private PlanItem toPlanItem(PlanItem item, int planNo) {
 		PlanItem planItem = new PlanItem();
+		planItem.setNo(item.getNo());
 		planItem.setLat(item.getLat());
 		planItem.setLng(item.getLng());
 		planItem.setMemo(item.getMemo());
