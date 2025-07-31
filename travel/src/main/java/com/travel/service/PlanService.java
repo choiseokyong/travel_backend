@@ -19,8 +19,19 @@ public class PlanService {
 		this.planmapper = planmapper;
 	}
 	
-	public List<Plan> getPlanByUser(int userNo){
-		return planmapper.getPlanByUserNo(userNo);
+	public PlanResponseDTO getPlanByPlanItem(int planNo){
+		PlanResponseDTO prDTO = new PlanResponseDTO();
+		Plan plan = planmapper.getPlanByOne(planNo);
+		
+		prDTO.setTitle(plan.getTitle());
+		prDTO.setStartDate(plan.getStartDate());
+		prDTO.setEndDate(plan.getEndDate());
+		prDTO.setUserNo(plan.getUserNo());
+		
+		List<PlanItem> planItem = planmapper.getPlanItem(planNo);
+		prDTO.setItem(planItem);
+		
+		return prDTO;
 		
 	}
 	

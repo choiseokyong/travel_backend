@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.travel.domain.Plan;
 import com.travel.domain.PlanItem;
+import com.travel.domain.PlanResponseDTO;
 
 @Mapper
 public interface PlanMapper {
@@ -16,10 +17,16 @@ public interface PlanMapper {
 	public int insertPlanItem(PlanItem planitem);
 	
 	// plan 조회
-	public List<Plan> getPlanByUserNo(int userNo);
+	public List<Plan> getPlan(int planNo);
+	
+	// plan 조회
+	public Plan getPlanByOne(int planNo);
 	
 	// planItem 조회
-	public boolean getPlanItemByUserNo(int no);
+	public List<PlanItem> getPlanItem(int planNo);
+	
+	// plan, planItem 조회
+	public List<PlanResponseDTO> getPlanByPlanItem(int planNo);
 	
 	// plan 수정
 	public int updatePlan(Plan plan);

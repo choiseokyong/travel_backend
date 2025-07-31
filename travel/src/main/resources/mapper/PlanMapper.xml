@@ -5,11 +5,15 @@
 
 <mapper namespace="com.travel.mapper.PlanMapper">
 
-  <select id="getPlanByUserNo" resultType="Plan">
-    SELECT * FROM plan WHERE user_no = #{userNo}
+  <select id="getPlanByOne" resultType="Plan">
+    SELECT * FROM plan WHERE no = #{no}
   </select>
-  <select id="getPlanItemByUserNo" resultType="PlanItem">
-    SELECT * FROM planitem WHERE no = #{no}
+  <select id="getPlanItem" resultType="PlanItem">
+    SELECT * FROM planitem WHERE plan_no = #{no}
+  </select>
+  <select id="getPlanByPlanItem" resultType="PlanResponseDTO">
+  	SELECT * FROM plan JOIN planitem on plan.no = planitem.plan_no WHERE plan.no = #{no}
+  	
   </select>
 
   <insert id="insertPlan" useGeneratedKeys="true" keyProperty="no">

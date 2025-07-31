@@ -2,6 +2,7 @@ package com.travel.service;
 
 import java.util.List;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.travel.domain.User;
@@ -10,9 +11,11 @@ import com.travel.mapper.UserMapper;
 @Service
 public class UserService {
 	private final UserMapper usermapper;
+	private final PasswordEncoder passwordencoder;	// 주입
 	
-	public UserService(UserMapper usermapper) {
+	public UserService(UserMapper usermapper,PasswordEncoder passwordencoder) {
 		this.usermapper = usermapper;
+		this.passwordencoder = passwordencoder;
 	}
 	
 	public List<User> getUserByNo(){
@@ -25,6 +28,7 @@ public class UserService {
 	}
 	
 	public int createUser(User user) {
+		user.setPassWord(passwordencoder.encode(user.getPassWord()));
 		return usermapper.insertUser(user);
 	}
 	

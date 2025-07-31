@@ -23,10 +23,10 @@ public class PlanController {
 		this.planservice = planservice;
 	}
 	
-	// plan,planitem 조인 쿼리 해야함.
-	@GetMapping("/{userNo}")
-	public List<Plan> getPlanByUser(@PathVariable int userNo) {
-		return planservice.getPlanByUser(userNo);
+	// plan,planitem 조회
+	@GetMapping("/{planNo}")
+	public PlanResponseDTO getPlanByPlanItem(@PathVariable int planNo) {
+		return planservice.getPlanByPlanItem(planNo);
 	}
 	
 	// plan,item 등록
