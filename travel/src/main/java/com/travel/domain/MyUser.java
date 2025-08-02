@@ -1,6 +1,6 @@
 package com.travel.domain;
 
-public class User {
+public class MyUser {
 
 	private Integer no;
 	private String name;
