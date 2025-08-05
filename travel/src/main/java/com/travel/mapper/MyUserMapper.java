@@ -8,9 +8,9 @@ import com.travel.domain.LoginRequest;
 import com.travel.domain.MyUser;
 
 @Mapper
-public interface UserMapper {
+public interface MyUserMapper {
 	// 로그인
-	public LoginRequest findByEmail(String email);
+	public MyUser findByEmail(String email);
 	
 	// 회원등록
 	public int insertUser(MyUser user);

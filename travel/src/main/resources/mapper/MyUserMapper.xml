@@ -3,19 +3,19 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.travel.mapper.UserMapper">
+<mapper namespace="com.travel.mapper.MyUserMapper">
 
-  <select id="getUserByNo" resultType="User">
+  <select id="getUserByNo" resultType="MyUser">
     SELECT * FROM user ORDER BY no DESC
   </select>
   
-  <select id="getUserByUserNo" resultType="User">
+  <select id="getUserByUserNo" resultType="MyUser">
     SELECT * FROM user WHERE no = #{userNo}
   </select>
 
   <insert id="insertUser">
-    INSERT INTO user (name, email, password, reg_date)
-    VALUES (#{name}, #{email}, #{passWord}, now())
+    INSERT INTO user (name, email, password, reg_date, grade)
+    VALUES (#{name}, #{email}, #{passWord}, now(), #{grade})
   </insert>
   
   <update id="updateUser">

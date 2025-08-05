@@ -4,6 +4,9 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,25 +14,44 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.travel.domain.LoginRequest;
+import com.travel.domain.LoginResponse;
 import com.travel.domain.MyUser;
-import com.travel.service.UserService;
+import com.travel.security.JwtTokenProvider;
+import com.travel.service.MyUserService;
+
+import jakarta.annotation.PostConstruct;
 
 @RestController
 @RequestMapping("/users")
-public class UserController {
-	private final UserService userservice;
+public class MyUserController {
+	private final MyUserService userservice;
+	private final AuthenticationManager authenticationManager; // 여기에서 주입받기
+	private final JwtTokenProvider jwtTokenProvider;
 	
-	
-	public UserController(UserService userservice) {
+	public MyUserController(MyUserService userservice,AuthenticationManager authenticationManager,JwtTokenProvider jwtTokenProvider) {
 		this.userservice = userservice;
+		this.authenticationManager = authenticationManager;
+		this.jwtTokenProvider = jwtTokenProvider;
 	}
 	
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody LoginRequest request) {
 		try {
-            return ResponseEntity.ok(userservice.login(request));
+			
+			Authentication authentication = authenticationManager.authenticate( 	//사용자 검증 전체 진행
+	            new UsernamePasswordAuthenticationToken(	// 로그인 요청 객체
+	                request.getEmail(),
+	                request.getPassword()
+	            )
+	            
+	        );
+		    String token = jwtTokenProvider.generateToken(authentication);
+		    System.out.println("값 ================= " + token);
+            return ResponseEntity.ok(new LoginResponse(token));
         } catch (AuthenticationException ex) {
+        	System.out.println("값 ================= 실패");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         }
 	}

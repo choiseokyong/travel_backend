@@ -2,7 +2,7 @@ package com.travel.domain;
 
 public class LoginRequest {
 	private String email;
-	private String password;
+	private String passWord;
 	
 	public String getEmail() {
 		return email;
@@ -11,10 +11,10 @@ public class LoginRequest {
 		this.email = email;
 	}
 	public String getPassword() {
-		return password;
+		return passWord;
 	}
-	public void setPassword(String password) {
-		this.password = password;
+	public void setPassword(String passWord) {
+		this.passWord = passWord;
 	}
 	
 	
