@@ -34,8 +34,9 @@ public class MyUserService implements UserDetailsService{
 		 * 직접 로그인 검증하지 않고, Security에게 필요한 정보를 제공해주는 역할.
 		 * 
 		 */
+		
         MyUser user = usermapper.findByEmail(email); // DB에서 사용자를 조회
-        System.out.println("값 ================= start ");
+        
         if (user == null) {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + email);		// 사용자 없을 경우 예외 던짐
         }
@@ -44,20 +45,25 @@ public class MyUserService implements UserDetailsService{
 
         // 여기서 비밀번호 비교 직접 하는 게 아니라, Spring Security가 authenticate()에서 해줌
         // 하지만 만약 직접 비교가 필요하면 passwordEncoder.matches(raw, encoded) 사용 가능
-        System.out.println("값================ " + user.getEmail());
-        return User.builder()	// Security가 사용할 UserDetails 객체 생성
+        try {
+            UserDetails userDetails = User.builder() // Security가 사용할 UserDetails 객체 생성
                 .username(user.getEmail())	// 로그인 시 비교할 username 설정
-                .password(user.getPassWord()) // 암호화된 비밀번호 그대로 넣기 ( Security가 비교함)
+                .password(user.getPassWord())	// 암호화된 비밀번호 그대로 넣기 ( Security가 비교함)
                 .roles(role)	// 권한 설정
                 .build();
+            System.out.println("userDetails: " + userDetails);
+            return userDetails;
+        } catch (Exception e) {
+            e.printStackTrace();  // 전체 예외 메시지 보기
+            throw new RuntimeException("UserDetails 생성 중 오류 발생", e);
+        }
     }
 	
 	private String convertGradeToRole(int grade) {
 	    switch (grade) {
-	    	case 1: return "ROLE_ADMIN";
-	        case 5: return "ROLE_USER";
-	        case 3: return "ROLE_MANAGER";
-	        default: return "ROLE_GUEST";
+	    	case 1: return "ADMIN";
+	        case 5: return "USER";
+	        default: return "GUEST";
 	    }
 	}
 	

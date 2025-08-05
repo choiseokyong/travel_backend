@@ -10,12 +10,14 @@ public class LoginRequest {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getPassword() {
+	public String getPassWord() {
 		return passWord;
 	}
-	public void setPassword(String passWord) {
+	public void setPassWord(String passWord) {
 		this.passWord = passWord;
 	}
+	
+	
 	
 	
 }

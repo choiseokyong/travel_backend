@@ -43,15 +43,13 @@ public class MyUserController {
 			Authentication authentication = authenticationManager.authenticate( 	//사용자 검증 전체 진행
 	            new UsernamePasswordAuthenticationToken(	// 로그인 요청 객체
 	                request.getEmail(),
-	                request.getPassword()
+	                request.getPassWord()
 	            )
 	            
 	        );
 		    String token = jwtTokenProvider.generateToken(authentication);
-		    System.out.println("값 ================= " + token);
             return ResponseEntity.ok(new LoginResponse(token));
         } catch (AuthenticationException ex) {
-        	System.out.println("값 ================= 실패");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         }
 	}

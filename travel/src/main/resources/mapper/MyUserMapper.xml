@@ -5,8 +5,8 @@
 
 <mapper namespace="com.travel.mapper.MyUserMapper">
 
-  <select id="getUserByNo" resultType="MyUser">
-    SELECT * FROM user ORDER BY no DESC
+  <select id="findByEmail" resultType="MyUser">
+    SELECT * FROM user WHERE email= #{email}
   </select>
   
   <select id="getUserByUserNo" resultType="MyUser">
