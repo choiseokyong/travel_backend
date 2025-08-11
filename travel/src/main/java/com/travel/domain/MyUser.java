@@ -6,7 +6,7 @@ public class MyUser {
 	private String name;
 	private String email;
 	private String passWord;
-	private int grade;
+	private Integer grade;
 	private String regDate;
 	
 	public Integer getNo() {
@@ -39,10 +39,10 @@ public class MyUser {
 	public void setRegDate(String regDate) {
 		this.regDate = regDate;
 	}
-	public int getGrade() {
+	public Integer getGrade() {
 		return grade;
 	}
-	public void setGrade(int grade) {
+	public void setGrade(Integer grade) {
 		this.grade = grade;
 	}
 	

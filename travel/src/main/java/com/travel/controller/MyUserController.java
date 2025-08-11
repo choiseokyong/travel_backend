@@ -21,7 +21,6 @@ import com.travel.domain.MyUser;
 import com.travel.security.JwtTokenProvider;
 import com.travel.service.MyUserService;
 
-import jakarta.annotation.PostConstruct;
 
 @RestController
 @RequestMapping("/users")
@@ -67,11 +66,15 @@ public class MyUserController {
 	
 	@PostMapping("/form")
     public int createUser(@RequestBody MyUser user) {
+		if(user.getGrade() == null) {
+			user.setGrade(1);
+		}
         return userservice.createUser(user);
     }
 	
 	@GetMapping("/modify")
 	public int modifyNo(@RequestBody MyUser user) {
+		
 		return userservice.modifyUser(user);
 	}
 	
