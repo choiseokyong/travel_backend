@@ -34,9 +34,16 @@ public class JwtTokenProvider {
     // 토큰 생성
     public String generateToken(Authentication authentication) {
         User userPrincipal = (User) authentication.getPrincipal();
+        
+     // 권한 문자열 리스트 추출
+        List<String> roles = userPrincipal.getAuthorities().stream()
+                .map(authority -> authority.getAuthority())  // "ROLE_USER", "ROLE_ADMIN" 등
+                .map(role -> role.startsWith("ROLE_") ? role.substring(5) : role) // "ROLE_" 제거해서 "USER" 등으로 변환
+                .collect(Collectors.toList());
 
         return Jwts.builder()
                 .setSubject(userPrincipal.getUsername())
+                .claim("roles", roles)   // roles 클레임 추가
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION_MS))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS512)
@@ -97,28 +104,20 @@ public class JwtTokenProvider {
 
         String email = getEmailFromToken(token);
         
-        List<Integer> roleNumbers = claims.get("roles", List.class);
+        List<String> roles  = claims.get("roles", List.class);
         
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         
-        if (roleNumbers != null) {
-            authorities = roleNumbers.stream()
-                    .map(role -> {
-                        switch (role) {
-                            case 1:
-                                return new SimpleGrantedAuthority("ADMIN");
-                            case 5:
-                                return new SimpleGrantedAuthority("USER");
-                            default:
-                                return new SimpleGrantedAuthority("GUEST");
-                        }
-                    })
+        if (roles != null) {
+            authorities = roles.stream()
+            		.map(role -> new SimpleGrantedAuthority("ROLE_" + role))  // "USER" → "ROLE_USER"
                     .collect(Collectors.toList());
         }
         
-        User principal = new User(email, "", authorities);
+//        User principal = new User(email, "", authorities);
+//        System.out.println("authorities = " + authorities);
         
         // 권한 정보는 비워도 되고, 필요하면 DB에서 가져올 수 있음
-        return new UsernamePasswordAuthenticationToken(email, null, new ArrayList<>());
+        return new UsernamePasswordAuthenticationToken(email, null, authorities);
     }
 }

@@ -35,10 +35,7 @@ public class MyUserController {
 		this.jwtTokenProvider = jwtTokenProvider;
 	}
 	
-	@GetMapping("/test")
-	public ResponseEntity<String> test() {
-	    return ResponseEntity.ok("인증 성공!");
-	}
+	
 	
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody LoginRequest request) {

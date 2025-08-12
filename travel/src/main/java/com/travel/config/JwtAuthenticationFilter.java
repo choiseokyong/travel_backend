@@ -26,9 +26,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String token = jwtTokenProvider.resolveToken(request); // 헤더에서 토큰 꺼내기
+        
         if (token != null && jwtTokenProvider.validateToken(token)) {
             Authentication auth = jwtTokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(auth);
+        }else {
+        	System.out.println("Invalid or missing JWT token");
         }
         filterChain.doFilter(request, response);
     }

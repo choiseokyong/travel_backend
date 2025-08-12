@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.travel.domain.Plan;
 import com.travel.domain.PlanResponseDTO;
 import com.travel.service.PlanService;
 
@@ -32,6 +30,7 @@ public class PlanController {
 	// plan,item 등록
 	@PostMapping("/form")
     public int createPlan(@RequestBody PlanResponseDTO planresponsedto) {
+		System.out.println("plan등록 : " + planresponsedto);
         return planservice.createPlan(planresponsedto);
     }
 	
