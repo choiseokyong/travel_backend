@@ -2,21 +2,26 @@ package com.travel.service;
 
 import java.util.List;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.travel.domain.Plan;
 import com.travel.domain.PlanItem;
 import com.travel.domain.PlanResponseDTO;
+import com.travel.mapper.MyUserMapper;
 import com.travel.mapper.PlanMapper;
 
 //@Transactional 오류 시 자동 롤백
 @Service
 public class PlanService {
 	private final PlanMapper planmapper;
+	private final MyUserMapper myusermapper;
 	private int flag;
 	
-	public PlanService(PlanMapper planmapper){
+	public PlanService(PlanMapper planmapper,MyUserMapper myusermapper){
 		this.planmapper = planmapper;
+		this.myusermapper = myusermapper;
 	}
 	
 	public PlanResponseDTO getPlanByPlanItem(int planNo){
@@ -36,9 +41,17 @@ public class PlanService {
 	}
 	
 	public int createPlan(PlanResponseDTO planresponsedto) {
+		// 현재 로그인한 사용자 정보 가져오기
+	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	    String email = (String) authentication.getPrincipal();  // JwtTokenProvider에서 Username으로 세팅한 값
+	    int userNo = myusermapper.findByEmail(email).getNo();      // 이메일로 user_no 조회
+	    
+	    // Plan 객체 생성 시 userNo 설정
 		Plan plan = toPlan(planresponsedto);
+		plan.setUserNo(userNo);
 		flag = planmapper.insertPlan(plan);
 		
+		// PlanItem 등록
 		for(PlanItem item : planresponsedto.getItem()) {
 			planmapper.insertPlanItem(toPlanItem(item,plan.getNo()));
 		}

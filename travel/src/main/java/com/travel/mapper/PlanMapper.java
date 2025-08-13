@@ -22,6 +22,7 @@ public interface PlanMapper {
 	// plan 조회
 	public Plan getPlanByOne(int planNo);
 	
+	
 	// planItem 조회
 	public List<PlanItem> getPlanItem(int planNo);
 	

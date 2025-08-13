@@ -30,7 +30,6 @@ public class PlanController {
 	// plan,item 등록
 	@PostMapping("/form")
     public int createPlan(@RequestBody PlanResponseDTO planresponsedto) {
-		System.out.println("plan등록 : " + planresponsedto);
         return planservice.createPlan(planresponsedto);
     }
 	
