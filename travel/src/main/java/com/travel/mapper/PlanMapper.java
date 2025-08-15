@@ -17,7 +17,7 @@ public interface PlanMapper {
 	public int insertPlanItem(PlanItem planitem);
 	
 	// plan 조회
-	public List<Plan> getPlan(int planNo);
+	public List<Plan> getPlan(int userNo);
 	
 	// plan 조회
 	public Plan getPlanByOne(int planNo);

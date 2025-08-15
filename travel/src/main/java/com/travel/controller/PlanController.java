@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.travel.domain.Plan;
 import com.travel.domain.PlanResponseDTO;
 import com.travel.service.PlanService;
 
@@ -21,8 +23,14 @@ public class PlanController {
 		this.planservice = planservice;
 	}
 	
-	// plan,planitem 조회
-	@GetMapping("/{planNo}")
+	// plan 조회
+	@GetMapping("/list")
+	public List<Plan> getPlan() {
+		return planservice.getPlan();
+	}
+		
+	// plan,planitem 상세 조회
+	@GetMapping("/list/{planNo}")
 	public PlanResponseDTO getPlanByPlanItem(@PathVariable int planNo) {
 		return planservice.getPlanByPlanItem(planNo);
 	}

@@ -5,6 +5,9 @@
 
 <mapper namespace="com.travel.mapper.PlanMapper">
 
+	<select id="getPlan" resultType="Plan">
+    SELECT * FROM plan WHERE user_no = #{userNo}
+  </select>
   <select id="getPlanByOne" resultType="Plan">
     SELECT * FROM plan WHERE no = #{no}
   </select>

@@ -24,6 +24,11 @@ public class PlanService {
 		this.myusermapper = myusermapper;
 	}
 	
+	public List<Plan> getPlan(){
+		int userNo = getUserNo();
+		return planmapper.getPlan(userNo);
+	}
+	
 	public PlanResponseDTO getPlanByPlanItem(int planNo){
 		PlanResponseDTO prDTO = new PlanResponseDTO();
 		Plan plan = planmapper.getPlanByOne(planNo);
@@ -112,5 +117,12 @@ public class PlanService {
 		planItem.setPlanNo(planNo);
 		
 		return planItem;
+	}
+	
+	private int getUserNo() {
+		// 현재 로그인한 사용자 정보 가져오기
+	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	    String email = (String) authentication.getPrincipal();  // JwtTokenProvider에서 Username으로 세팅한 값
+	    return myusermapper.findByEmail(email).getNo();      // 이메일로 user_no 조회
 	}
 }
