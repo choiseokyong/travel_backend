@@ -6,7 +6,7 @@
 <mapper namespace="com.travel.mapper.PlanMapper">
 
 	<select id="getPlan" resultType="Plan">
-    SELECT * FROM plan WHERE user_no = #{userNo}
+    SELECT * FROM plan WHERE user_no = #{userNo} ORDER BY no DESC
   </select>
   <select id="getPlanByOne" resultType="Plan">
     SELECT * FROM plan WHERE no = #{no}
@@ -24,8 +24,8 @@
     VALUES (#{title}, #{startDate}, #{endDate}, now(), #{userNo})
   </insert>
   <insert id="insertPlanItem">
-    INSERT INTO planItem (plan_date, place, lat, lng, memo, plan_sort, reg_date, plan_no)
-    VALUES (#{planDate}, #{place}, #{lat}, #{lng}, #{memo}, #{planSort}, now(), #{planNo})
+    INSERT INTO planItem (plan_date, day, place, lat, lng, memo, plan_sort, reg_date, plan_no)
+    VALUES (#{planDate}, #{day}, #{place}, #{lat}, #{lng}, #{memo}, #{planSort}, now(), #{planNo})
   </insert>
   
   <update id="updatePlan">

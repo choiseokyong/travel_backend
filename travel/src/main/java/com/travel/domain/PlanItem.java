@@ -3,13 +3,15 @@ package com.travel.domain;
 public class PlanItem {
 	private Integer no;
 	private String planDate;
+	private int day;
 	private String place;
-	private int lat;
-	private int lng;
+	private double lat;
+	private double lng;
 	private String memo;
 	private int planSort;
 	private String regDate;
 	private int planNo; // plan 번호
+	
 	
 	public Integer getNo() {
 		return no;
@@ -23,22 +25,29 @@ public class PlanItem {
 	public void setPlanDate(String planDate) {
 		this.planDate = planDate;
 	}
+	
+	public int getDay() {
+		return day;
+	}
+	public void setDay(int day) {
+		this.day = day;
+	}
 	public String getPlace() {
 		return place;
 	}
 	public void setPlace(String place) {
 		this.place = place;
 	}
-	public int getLat() {
+	public double getLat() {
 		return lat;
 	}
-	public void setLat(int lat) {
+	public void setLat(double lat) {
 		this.lat = lat;
 	}
-	public int getLng() {
+	public double getLng() {
 		return lng;
 	}
-	public void setLng(int lng) {
+	public void setLng(double lng) {
 		this.lng = lng;
 	}
 	public String getMemo() {

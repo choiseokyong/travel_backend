@@ -108,6 +108,7 @@ public class PlanService {
 	private PlanItem toPlanItem(PlanItem item, int planNo) {
 		PlanItem planItem = new PlanItem();
 		planItem.setNo(item.getNo());
+		planItem.setDay(item.getDay());
 		planItem.setLat(item.getLat());
 		planItem.setLng(item.getLng());
 		planItem.setMemo(item.getMemo());
