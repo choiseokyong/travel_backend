@@ -2,9 +2,11 @@ package com.travel.controller;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,19 +44,19 @@ public class PlanController {
     }
 	
 	// plan,item 수정
-	@GetMapping("/modify")
+	@PutMapping("/modify")
 	public int modifyNo(@RequestBody PlanResponseDTO planresponsedto) {
 		return planservice.modifyPlan(planresponsedto);
 	}
 	
 	// plan 삭제
-	@GetMapping("/delete/{planNo}")
+	@DeleteMapping("/delete/{planNo}")
 	public int deleteNo(@PathVariable int planNo) {
 		return planservice.deletePlan(planNo);
 	}
 	
 	// planitem 삭제
-	@GetMapping("/delete/item/{planItemNo}")
+	@DeleteMapping("/delete/item/{planItemNo}")
 	public int deleteItemNo(@PathVariable int planItemNo) {
 		return planservice.deletePlanItem(planItemNo);
 	}

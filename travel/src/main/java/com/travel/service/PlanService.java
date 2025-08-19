@@ -33,6 +33,7 @@ public class PlanService {
 		PlanResponseDTO prDTO = new PlanResponseDTO();
 		Plan plan = planmapper.getPlanByOne(planNo);
 		
+		prDTO.setNo(plan.getNo());
 		prDTO.setTitle(plan.getTitle());
 		prDTO.setStartDate(plan.getStartDate());
 		prDTO.setEndDate(plan.getEndDate());
@@ -71,7 +72,7 @@ public class PlanService {
 		flag = planmapper.updatePlan(plan);
 		for(PlanItem item : planresponsedto.getItem()) {
 			// planitem 있는지 없는지 확인해서 수정 또는 등록 되게 작업 필요.
-			System.out.println("번호==== " + item.getNo());
+			
 			if(item.getNo() != null) {
 				planmapper.updatePlanItem(toPlanItem(item,plan.getNo()));
 			}else {
