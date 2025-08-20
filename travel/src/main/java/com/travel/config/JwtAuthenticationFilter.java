@@ -24,6 +24,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+    	
+    	String uri = request.getRequestURI();
+
+    	if (uri.equals("/favicon.ico") || 
+    	    (uri.startsWith("/plans/share/") && !uri.startsWith("/plans/share/new/"))) {
+    	    filterChain.doFilter(request, response); // JWT 검사 건너뛰기
+    	    return;
+    	}
 
         String token = jwtTokenProvider.resolveToken(request); // 헤더에서 토큰 꺼내기
         

@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -20,26 +21,30 @@ import com.travel.mapper.PlanMapper;
 public class PlanService {
 	private final PlanMapper planmapper;
 	private final MyUserMapper myusermapper;
+	
 	private int flag;
 	
 	public PlanService(PlanMapper planmapper,MyUserMapper myusermapper){
 		this.planmapper = planmapper;
 		this.myusermapper = myusermapper;
+		
 	}
 	
 	public List<Plan> getPlan(){
 		int userNo = getUserNo();
 		return planmapper.getPlan(userNo);
 	}
+	/* share 관련*/
+	
 	// share 조회
-	public List<PlanResponseDTO> getSharedPlan(String uuid) {
+	public PlanResponseDTO getSharedPlan(String uuid) {
 		PlanShare share = planmapper.findByUuid(uuid);
 		
 		if (share == null || share.getExpireDate().isBefore(LocalDateTime.now())) {
             throw new RuntimeException("공유 링크가 만료되었거나 존재하지 않습니다.");
         }
 		
-		return planmapper.getPlanByPlanItem(share.getPlanNo()); // 기존 일정 조회
+		return getPlanByPlanItem(share.getPlanNo()); // 기존 일정 조회
 	}
 	// share 생성
 	public String createPlanShare(Integer planNo) {
@@ -50,9 +55,10 @@ public class PlanService {
 		share.setShareUuid(uuid);
 		share.setExpireDate(LocalDateTime.now().plusDays(7)); // 7일 유효
 		planmapper.insertPlanShare(share);
-		return "http://localhost:8080/plans/share/" + uuid;
+		return "http://localhost:5173/plans/share/" + uuid;
 	}
 	
+	/* plan 관련 */
 	public PlanResponseDTO getPlanByPlanItem(int planNo){
 		PlanResponseDTO prDTO = new PlanResponseDTO();
 		Plan plan = planmapper.getPlanByOne(planNo);

@@ -3,6 +3,8 @@ package com.travel.controller;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,28 +17,45 @@ import org.springframework.web.bind.annotation.RestController;
 import com.travel.domain.Plan;
 import com.travel.domain.PlanResponseDTO;
 import com.travel.domain.PlanShare;
+import com.travel.service.EmailService;
 import com.travel.service.PlanService;
+
+import jakarta.mail.MessagingException;
 
 
 @RestController
 @RequestMapping("/plans")
 public class PlanController {
 	private final PlanService planservice;
+	private final EmailService mailSender;
 	
-	public PlanController(PlanService planservice) {
+	public PlanController(PlanService planservice,EmailService mailSender) {
 		this.planservice = planservice;
+		this.mailSender = mailSender;
 	}
 	
 	// 공유 링크 접근 api
 	@GetMapping("/share/{uuid}")
-	public List<PlanResponseDTO> getSharedPlan(@PathVariable String uuid){
+	public PlanResponseDTO getSharedPlan(@PathVariable String uuid){
 		return planservice.getSharedPlan(uuid);
 	}
 	
 	// 공유 링크 생성 api
-	@PostMapping("/share/{planNo}")
+	@PostMapping("/share/new/{planNo}")
 	public ResponseEntity<String> createShare(@PathVariable Integer planNo){
+		
 		String link = planservice.createPlanShare(planNo);
+		try {
+			// 현재 로그인한 사용자 정보 가져오기
+		    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		    String email = (String) authentication.getPrincipal();  // JwtTokenProvider에서 Username으로 세팅한 값
+		    
+			mailSender.sendShareLink("ggt9875654@naver.com", link,"naver");
+//			mailSender.sendShareLink(email, link);
+		} catch (MessagingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return ResponseEntity.ok(link);
 	}
 	
