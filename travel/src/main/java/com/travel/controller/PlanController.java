@@ -2,6 +2,7 @@ package com.travel.controller;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.travel.domain.Plan;
 import com.travel.domain.PlanResponseDTO;
+import com.travel.domain.PlanShare;
 import com.travel.service.PlanService;
 
 
@@ -23,6 +25,19 @@ public class PlanController {
 	
 	public PlanController(PlanService planservice) {
 		this.planservice = planservice;
+	}
+	
+	// 공유 링크 접근 api
+	@GetMapping("/share/{uuid}")
+	public List<PlanResponseDTO> getSharedPlan(@PathVariable String uuid){
+		return planservice.getSharedPlan(uuid);
+	}
+	
+	// 공유 링크 생성 api
+	@PostMapping("/share/{planNo}")
+	public ResponseEntity<String> createShare(@PathVariable Integer planNo){
+		String link = planservice.createPlanShare(planNo);
+		return ResponseEntity.ok(link);
 	}
 	
 	// plan 조회

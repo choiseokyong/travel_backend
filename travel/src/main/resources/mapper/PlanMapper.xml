@@ -4,7 +4,15 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.travel.mapper.PlanMapper">
-
+	<!-- planShare -->
+	<insert id="insertPlanShare" keyProperty="no">
+		INSERT INTO plan_share (plan_no, share_uuid, expire_date, reg_date) VALUES (#{planNo}, #{shareUuid}, #{expireDate}, now())
+	</insert>
+	<select id="findByUuid" resultType="PlanShare">
+		SELECT * FROM plan_share WHERE share_uuid = #{shareUuid}
+	</select>
+	
+	<!-- plan -->
 	<select id="getPlan" resultType="Plan">
     SELECT * FROM plan WHERE user_no = #{userNo} ORDER BY no DESC
   </select>
@@ -16,7 +24,6 @@
   </select>
   <select id="getPlanByPlanItem" resultType="PlanResponseDTO">
   	SELECT * FROM plan JOIN planitem on plan.no = planitem.plan_no WHERE plan.no = #{no}
-  	
   </select>
 
   <insert id="insertPlan" useGeneratedKeys="true" keyProperty="no">

@@ -1,6 +1,8 @@
 package com.travel.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.travel.domain.Plan;
 import com.travel.domain.PlanItem;
 import com.travel.domain.PlanResponseDTO;
+import com.travel.domain.PlanShare;
 import com.travel.mapper.MyUserMapper;
 import com.travel.mapper.PlanMapper;
 
@@ -27,6 +30,27 @@ public class PlanService {
 	public List<Plan> getPlan(){
 		int userNo = getUserNo();
 		return planmapper.getPlan(userNo);
+	}
+	// share 조회
+	public List<PlanResponseDTO> getSharedPlan(String uuid) {
+		PlanShare share = planmapper.findByUuid(uuid);
+		
+		if (share == null || share.getExpireDate().isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("공유 링크가 만료되었거나 존재하지 않습니다.");
+        }
+		
+		return planmapper.getPlanByPlanItem(share.getPlanNo()); // 기존 일정 조회
+	}
+	// share 생성
+	public String createPlanShare(Integer planNo) {
+		String uuid = UUID.randomUUID().toString();
+		
+		PlanShare share = new PlanShare();
+		share.setPlanNo(planNo);
+		share.setShareUuid(uuid);
+		share.setExpireDate(LocalDateTime.now().plusDays(7)); // 7일 유효
+		planmapper.insertPlanShare(share);
+		return "http://localhost:8080/plans/share/" + uuid;
 	}
 	
 	public PlanResponseDTO getPlanByPlanItem(int planNo){

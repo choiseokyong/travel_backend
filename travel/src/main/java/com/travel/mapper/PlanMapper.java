@@ -7,9 +7,16 @@ import org.apache.ibatis.annotations.Mapper;
 import com.travel.domain.Plan;
 import com.travel.domain.PlanItem;
 import com.travel.domain.PlanResponseDTO;
+import com.travel.domain.PlanShare;
 
 @Mapper
 public interface PlanMapper {
+	
+	// planshare 조회
+	public PlanShare findByUuid(String shareUuid);
+	// planshare 등록
+	public int insertPlanShare(PlanShare planShare);
+	
 	// plan 등록
 	public int insertPlan(Plan plan);
 	
