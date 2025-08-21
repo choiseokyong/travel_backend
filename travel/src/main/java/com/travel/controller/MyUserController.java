@@ -1,8 +1,11 @@
 package com.travel.controller;
 
+import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,6 +24,10 @@ import com.travel.domain.MyUser;
 import com.travel.security.JwtTokenProvider;
 import com.travel.service.MyUserService;
 
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+
 
 @RestController
 @RequestMapping("/users")
@@ -36,6 +43,36 @@ public class MyUserController {
 	}
 	
 	
+	@PostMapping("/auth/refresh")
+	public ResponseEntity<?> refreshToken(HttpServletRequest request) {
+	    // 쿠키에서 Refresh Token 추출
+	    String refreshToken = Arrays.stream(request.getCookies())
+	            .filter(c -> "refreshToken".equals(c.getName()))
+	            .findFirst()
+	            .map(Cookie::getValue)
+	            .orElse(null);
+
+	    if (refreshToken == null || !jwtTokenProvider.validateRefreshToken(refreshToken)) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
+	    }
+	    
+//	    generateToken(String username, List<String> roles) → 로그인 시 발급 토큰과 동일 구조로 생성
+//
+//	    Refresh Token에서 username + roles를 추출 → 새 Access Token 생성
+//
+//	    getRolesFromClaims로 타입 안전하게 roles 추출
+//
+//	    SecurityContext에서 권한 문제 없이 사용 가능 ✅
+
+	    // Refresh Token 검증 성공 → 새 Access Token 발급
+	    String username = jwtTokenProvider.getUsernameFromToken(refreshToken);
+	    Claims claims = jwtTokenProvider.getClaimsFromToken(refreshToken);
+	    List<String> roles = jwtTokenProvider.getRolesFromClaims(claims);
+
+	    String newAccessToken = jwtTokenProvider.generateToken(username,roles);
+
+	    return ResponseEntity.ok(new LoginResponse(newAccessToken));
+	}
 	
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody LoginRequest request) {
@@ -49,7 +86,16 @@ public class MyUserController {
 	            
 	        );
 		    String token = jwtTokenProvider.generateToken(authentication);
-            return ResponseEntity.ok(new LoginResponse(token));
+		 // Refresh Token 생성 (긴 만료)
+	        String refreshToken = jwtTokenProvider.generateRefreshToken(authentication);
+	        ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
+	                .httpOnly(true)
+	                .secure(false)   // HTTPS 환경이면 true
+	                .path("/")
+	                .maxAge(7 * 24 * 60 * 60) // 7일
+	                .build();
+	        
+            return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body(new LoginResponse(token));
         } catch (AuthenticationException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         }

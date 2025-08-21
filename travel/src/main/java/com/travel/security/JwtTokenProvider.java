@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -24,12 +25,88 @@ import jakarta.servlet.http.HttpServletRequest;
 public class JwtTokenProvider {
 
 	private final String JWT_SECRET = "mySuperSecretKeyThatIsLongEnoughToBeUsedWithHS512Algorithm123456!";
-    private final long JWT_EXPIRATION_MS = 86400000; // 1일
+    private final long JWT_EXPIRATION_MS = 1000*60*1; // 30분
 
     private Key getSigningKey() {
         byte[] keyBytes = JWT_SECRET.getBytes();
         return Keys.hmacShaKeyFor(keyBytes);
     }
+    
+ // Refresh Token 생성
+    public String generateRefreshToken(Authentication authentication) {
+        User userPrincipal = (User) authentication.getPrincipal();
+
+        List<String> roles = userPrincipal.getAuthorities().stream()
+                .map(authority -> authority.getAuthority())
+                .map(role -> role.startsWith("ROLE_") ? role.substring(5) : role)
+                .collect(Collectors.toList());
+
+        long refreshExpiration = 1000L * 60 * 60 * 24 * 7; // 7일
+
+        return Jwts.builder()
+                .setSubject(userPrincipal.getUsername())
+                .claim("roles", roles)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + refreshExpiration))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS512)
+                .compact();
+    }
+
+    
+    public String getUsernameFromToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject(); // JWT의 subject를 username으로 사용
+    }
+    
+    // 토큰 리프레쉬
+    public boolean validateRefreshToken(String token) {
+        try {
+            Jwts.parserBuilder()
+                .setSigningKey(getSigningKey()) // Access Token과 같은 키 사용 가능
+                .build()
+                .parseClaimsJws(token);
+            return true;
+        } catch (ExpiredJwtException e) {
+            // Refresh Token도 만료됐으면 재로그인 필요
+            System.out.println("Refresh token expired: " + e.getMessage());
+            return false;
+        } catch (JwtException | IllegalArgumentException e) {
+            System.out.println("Invalid refresh token: " + e.getMessage());
+            return false;
+        }
+    }
+    
+ // Claims에서 roles 안전하게 추출
+    public List<String> getRolesFromClaims(Claims claims) {
+        List<String> roles = new ArrayList<>();
+        Object claimRoles = claims.get("roles");
+
+        if (claimRoles instanceof List<?>) {
+            for (Object role : (List<?>) claimRoles) {
+                if (role instanceof String) {
+                    roles.add((String) role);
+                }
+            }
+        }
+
+        return roles;
+    }
+    
+ // username + roles 기반으로 Access Token 생성 (Refresh Token 재발급용)
+    public String generateToken(String username, List<String> roles) {
+        return Jwts.builder()
+                .setSubject(username)
+                .claim("roles", roles)   // 로그인 시 토큰과 동일하게 roles 포함
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRATION_MS))
+                .signWith(getSigningKey(), SignatureAlgorithm.HS512)
+                .compact();
+    }
+
 
     // 토큰 생성
     public String generateToken(Authentication authentication) {
@@ -81,7 +158,11 @@ public class JwtTokenProvider {
                     .build()
                     .parseClaimsJws(token);
             return true;
-        } catch (JwtException | IllegalArgumentException e) {
+        } catch (ExpiredJwtException e) {
+            // 토큰 만료됨
+            System.out.println("JWT expired: " + e.getMessage());
+            throw e; // 또는 커스텀 예외 던져서 Refresh 처리
+        }catch (JwtException | IllegalArgumentException e) {
             return false;
         }
     }
