@@ -60,7 +60,7 @@ public class SecurityConfig {
         	.csrf(csrf -> csrf.disable())  // POST 요청에 CSRF 토큰 없이 허용
         	.cors(cors -> cors.configurationSource(corsConfigurationSource())) // ✅ CORS 활성화
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth.requestMatchers("/users/form", "/users/login", "/plans/share/**","/auth/refresh/**").permitAll()	//모두 허용
+            .authorizeHttpRequests(auth -> auth.requestMatchers("/users/form", "/users/login", "/plans/share/**","/users/auth/refresh/**").permitAll()	//모두 허용
             		.requestMatchers("/admin/**").hasRole("ADMIN")			// admin 권한 필요
             		.requestMatchers("/user/**","/plans/**").hasAnyRole("USER","ADMIN")	// user 또는 admin 권한 필요
             		.anyRequest().authenticated()							// 나머지 요청은 인증된 사용자만 허용

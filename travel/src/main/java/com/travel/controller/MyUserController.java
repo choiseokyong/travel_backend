@@ -11,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +23,7 @@ import com.travel.domain.LoginRequest;
 import com.travel.domain.LoginResponse;
 import com.travel.domain.MyUser;
 import com.travel.security.JwtTokenProvider;
+import com.travel.security.JwtTokenProvider.TokenStatus;
 import com.travel.service.MyUserService;
 
 import io.jsonwebtoken.Claims;
@@ -44,17 +46,26 @@ public class MyUserController {
 	
 	
 	@PostMapping("/auth/refresh")
-	public ResponseEntity<?> refreshToken(HttpServletRequest request) {
-	    // 쿠키에서 Refresh Token 추출
+	public ResponseEntity<?> refreshToken(@CookieValue(value = "refreshToken", required = false) String testrefreshToken,HttpServletRequest request) {
+		
+		// 쿠키에서 Refresh Token 추출
 	    String refreshToken = Arrays.stream(request.getCookies())
 	            .filter(c -> "refreshToken".equals(c.getName()))
 	            .findFirst()
 	            .map(Cookie::getValue)
 	            .orElse(null);
-
-	    if (refreshToken == null || !jwtTokenProvider.validateRefreshToken(refreshToken)) {
-	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
+	    
+	    // Refresh 토큰 검사
+	    TokenStatus refreshStatus = jwtTokenProvider.validateRefreshToken(refreshToken);
+	    System.out.println("refreshStatus: " + refreshStatus);
+	    switch(refreshStatus) {
+	    case VALID:break;
+	    case EXPIRED:
+	    	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Refresh token expired, please login again");
+	    case INVALID:
+	    	return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
 	    }
+	    
 	    
 //	    generateToken(String username, List<String> roles) → 로그인 시 발급 토큰과 동일 구조로 생성
 //

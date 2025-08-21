@@ -32,7 +32,13 @@ public class JwtTokenProvider {
         return Keys.hmacShaKeyFor(keyBytes);
     }
     
- // Refresh Token 생성
+    public enum TokenStatus {
+        VALID,
+        EXPIRED,
+        INVALID
+    }
+    
+ // Refresh Token 생성 - 로그인 시 발급
     public String generateRefreshToken(Authentication authentication) {
         User userPrincipal = (User) authentication.getPrincipal();
 
@@ -62,21 +68,21 @@ public class JwtTokenProvider {
                 .getSubject(); // JWT의 subject를 username으로 사용
     }
     
-    // 토큰 리프레쉬
-    public boolean validateRefreshToken(String token) {
+    // 토큰 리프레쉬 검사
+    public TokenStatus validateRefreshToken(String token) {
         try {
             Jwts.parserBuilder()
                 .setSigningKey(getSigningKey()) // Access Token과 같은 키 사용 가능
                 .build()
                 .parseClaimsJws(token);
-            return true;
+            return TokenStatus.VALID;
         } catch (ExpiredJwtException e) {
             // Refresh Token도 만료됐으면 재로그인 필요
             System.out.println("Refresh token expired: " + e.getMessage());
-            return false;
+            return TokenStatus.EXPIRED;
         } catch (JwtException | IllegalArgumentException e) {
             System.out.println("Invalid refresh token: " + e.getMessage());
-            return false;
+            return TokenStatus.INVALID;
         }
     }
     
@@ -108,7 +114,7 @@ public class JwtTokenProvider {
     }
 
 
-    // 토큰 생성
+    // 토큰 생성 - 로그인 시 생성
     public String generateToken(Authentication authentication) {
         User userPrincipal = (User) authentication.getPrincipal();
         
@@ -151,19 +157,19 @@ public class JwtTokenProvider {
     }
 
     // 토큰 유효성 검증
-    public boolean validateToken(String token) {
+    public TokenStatus validateToken(String token) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(getSigningKey())
                     .build()
                     .parseClaimsJws(token);
-            return true;
+            return TokenStatus.VALID;
         } catch (ExpiredJwtException e) {
             // 토큰 만료됨
             System.out.println("JWT expired: " + e.getMessage());
-            throw e; // 또는 커스텀 예외 던져서 Refresh 처리
+            return TokenStatus.EXPIRED;
         }catch (JwtException | IllegalArgumentException e) {
-            return false;
+        	return TokenStatus.INVALID;
         }
     }
     
