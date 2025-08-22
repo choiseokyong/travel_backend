@@ -77,7 +77,7 @@ public class PlanService {
 	}
 	
 	public int createPlan(PlanResponseDTO planresponsedto) {
-		// 현재 로그인한 사용자 정보 가져오기
+		// 현재 로그인한 사용자 정보 가져오기 (컨트롤러에선 파라미터로 받아서 이메일 구할 수 있음)
 	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	    String email = (String) authentication.getPrincipal();  // JwtTokenProvider에서 Username으로 세팅한 값
 	    int userNo = myusermapper.findByEmail(email).getNo();      // 이메일로 user_no 조회

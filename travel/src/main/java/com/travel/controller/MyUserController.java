@@ -44,6 +44,12 @@ public class MyUserController {
 		this.jwtTokenProvider = jwtTokenProvider;
 	}
 	
+//	@PostMapping("/mypage")
+//	public MyUser getMyInfo(Authentication authentication) {
+//		String email = authentication.getName(); // JWT에서 추출된 email
+//        MyUser user = MyUserService.findByEmail(email);
+//        return ResponseEntity.ok(user);
+//	}
 	
 	@PostMapping("/auth/refresh")
 	public ResponseEntity<?> refreshToken(@CookieValue(value = "refreshToken", required = false) String testrefreshToken,HttpServletRequest request) {
@@ -118,16 +124,17 @@ public class MyUserController {
 	}
 	
 	// 개인회원 조회
-	@GetMapping("/{userNo}")
-	public List<MyUser> getUserByUserNo(@PathVariable int userNo) {
-		return userservice.getUserByUserNo(userNo);
+	@GetMapping("/mypage/form")
+	public MyUser getUserByUserNo(Authentication authentication) {
+		String email = authentication.getName(); // JWT에서 추출된 email
+//		MyUser user = userservice.findByEmail(email);
+		return null;
 	}
 	
+	// 회원가입
 	@PostMapping("/form")
     public int createUser(@RequestBody MyUser user) {
-		if(user.getGrade() == null) {
-			user.setGrade(1);
-		}
+		
         return userservice.createUser(user);
     }
 	

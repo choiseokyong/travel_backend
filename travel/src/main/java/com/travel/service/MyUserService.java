@@ -77,6 +77,10 @@ public class MyUserService implements UserDetailsService{
 	}
 	
 	public int createUser(MyUser user) {
+		MyUser myuser= usermapper.findByEmail(user.getEmail());
+		if (myuser != null) {
+	        throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
+	    }
 		user.setPassWord(passwordencoder.encode(user.getPassWord()));
 		return usermapper.insertUser(user);
 	}
