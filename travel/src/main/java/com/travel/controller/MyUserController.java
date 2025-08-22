@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,6 +30,7 @@ import com.travel.service.MyUserService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 
 @RestController
@@ -93,6 +95,7 @@ public class MyUserController {
 	
 	@PostMapping("/login")
 	public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+		
 		try {
 			
 			Authentication authentication = authenticationManager.authenticate( 	//사용자 검증 전체 진행
@@ -102,9 +105,12 @@ public class MyUserController {
 	            )
 	            
 	        );
+			
 		    String token = jwtTokenProvider.generateToken(authentication);
+		    
 		 // Refresh Token 생성 (긴 만료)
 	        String refreshToken = jwtTokenProvider.generateRefreshToken(authentication);
+	        
 	        ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
 	                .httpOnly(true)
 	                .secure(false)   // HTTPS 환경이면 true
@@ -118,6 +124,18 @@ public class MyUserController {
         }
 	}
 	
+	@PostMapping("/logout")
+	public ResponseEntity<?> logout(HttpServletResponse response) {
+	    ResponseCookie cookie = ResponseCookie.from("refreshToken", "")
+	            .httpOnly(true)
+	            .secure(false)   // HTTPS 환경이면 true
+	            .path("/")
+	            .maxAge(0)  // 즉시 만료
+	            .build();
+	    
+	    return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body("");
+	}
+	
 	// 회원 전체 조회
 	public List<MyUser> getUserByNo() {
 		return userservice.getUserByNo();
@@ -125,10 +143,9 @@ public class MyUserController {
 	
 	// 개인회원 조회
 	@GetMapping("/mypage/form")
-	public MyUser getUserByUserNo(Authentication authentication) {
+	public MyUser getUserByOne(Authentication authentication) {
 		String email = authentication.getName(); // JWT에서 추출된 email
-//		MyUser user = userservice.findByEmail(email);
-		return null;
+		return userservice.getUserByOne(email);
 	}
 	
 	// 회원가입
@@ -138,7 +155,7 @@ public class MyUserController {
         return userservice.createUser(user);
     }
 	
-	@GetMapping("/modify")
+	@PutMapping("/modify")
 	public int modifyNo(@RequestBody MyUser user) {
 		
 		return userservice.modifyUser(user);

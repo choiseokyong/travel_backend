@@ -19,7 +19,7 @@ public interface MyUserMapper {
 	public List<MyUser> getUserByNo();
 	
 	// 특정 회원조회
-	public List<MyUser> getUserByUserNo(int userNo);
+	public MyUser getUserByOne(String email);
 	
 	// 회원수정
 	public int updateUser(MyUser user);

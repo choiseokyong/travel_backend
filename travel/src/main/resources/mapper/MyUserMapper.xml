@@ -19,7 +19,11 @@
   </insert>
   
   <update id="updateUser">
-  	UPDATE user SET name= #{name}, email= #{email}, password= #{passWord} WHERE no= #{no}
+  	UPDATE user SET name= #{name}
+  	<if test="passWord != null and passWord != ''">
+  		,password= #{passWord} 
+  	</if>
+  	WHERE email= #{email}
   </update>
   
   <delete id="deleteUser">

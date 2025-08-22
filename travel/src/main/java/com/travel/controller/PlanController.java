@@ -50,9 +50,10 @@ public class PlanController {
 		    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		    String email = (String) authentication.getPrincipal();  // JwtTokenProvider에서 Username으로 세팅한 값
 		    
-			mailSender.sendShareLink("ggt9875654@naver.com", link,"naver");
+//			mailSender.sendShareLink("ggt9875654@naver.com", link,"naver");
 //			mailSender.sendShareLink(email, link);
-		} catch (MessagingException e) {
+		    //MessagingException
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

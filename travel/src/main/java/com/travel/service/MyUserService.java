@@ -40,9 +40,8 @@ public class MyUserService implements UserDetailsService{
         if (user == null) {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + email);		// 사용자 없을 경우 예외 던짐
         }
-        
         String role = convertGradeToRole(user.getGrade());
-
+        
         // 여기서 비밀번호 비교 직접 하는 게 아니라, Spring Security가 authenticate()에서 해줌
         // 하지만 만약 직접 비교가 필요하면 passwordEncoder.matches(raw, encoded) 사용 가능
         try {
@@ -72,8 +71,8 @@ public class MyUserService implements UserDetailsService{
 		
 	}
 	
-	public List<MyUser> getUserByUserNo(int userNo){
-		return usermapper.getUserByUserNo(userNo);
+	public MyUser getUserByOne(String email){
+		return usermapper.findByEmail(email);
 	}
 	
 	public int createUser(MyUser user) {
@@ -81,11 +80,19 @@ public class MyUserService implements UserDetailsService{
 		if (myuser != null) {
 	        throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
 	    }
+		
+		if(user.getGrade() == null || user.getPassWord().isBlank()) {
+			user.setGrade(5);
+		}
+		
 		user.setPassWord(passwordencoder.encode(user.getPassWord()));
 		return usermapper.insertUser(user);
 	}
 	
 	public int modifyUser(MyUser user) {
+		if(user.getPassWord() != null && !user.getPassWord().isBlank()) {
+			user.setPassWord(passwordencoder.encode(user.getPassWord()));
+		}
 		return usermapper.updateUser(user);
 	}
 	
