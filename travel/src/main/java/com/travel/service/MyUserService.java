@@ -40,6 +40,7 @@ public class MyUserService implements UserDetailsService{
         if (user == null) {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + email);		// 사용자 없을 경우 예외 던짐
         }
+        
         String role = convertGradeToRole(user.getGrade());
         
         // 여기서 비밀번호 비교 직접 하는 게 아니라, Spring Security가 authenticate()에서 해줌

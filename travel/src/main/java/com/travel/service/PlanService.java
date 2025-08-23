@@ -1,16 +1,18 @@
 package com.travel.service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.travel.domain.Plan;
 import com.travel.domain.PlanItem;
+import com.travel.domain.PlanRequestDTO;
 import com.travel.domain.PlanResponseDTO;
 import com.travel.domain.PlanShare;
 import com.travel.mapper.MyUserMapper;
@@ -30,9 +32,21 @@ public class PlanService {
 		
 	}
 	
-	public List<Plan> getPlan(){
+	public Map<String, Object> getPlan(PlanRequestDTO planrequestdto){
+		
+		System.out.println(planrequestdto.getPage());
 		int userNo = getUserNo();
-		return planmapper.getPlan(userNo);
+		int totalCount = planmapper.getPlanAllCount(userNo);
+		
+		
+		planrequestdto.setTotalPage((totalCount + planrequestdto.getSize() -1) / planrequestdto.getSize());
+		
+		planrequestdto.setPage((planrequestdto.getPage())* planrequestdto.getSize());
+		
+		Map<String, Object> result = new HashMap<>();
+		result.put("planList", planmapper.getPlan(userNo,planrequestdto));
+		result.put("pageInfo", planrequestdto);
+		return result;
 	}
 	/* share 관련*/
 	

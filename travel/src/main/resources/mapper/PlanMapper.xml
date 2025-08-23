@@ -13,41 +13,44 @@
 	</select>
 	
 	<!-- plan -->
+	<select id="getPlanAllCount" resultType="int">
+		SELECT COUNT(*) FROM plan WHERE user_no = #{userNo}
+	</select>
 	<select id="getPlan" resultType="Plan">
-    SELECT * FROM plan WHERE user_no = #{userNo} ORDER BY no DESC
-  </select>
-  <select id="getPlanByOne" resultType="Plan">
-    SELECT * FROM plan WHERE no = #{no}
-  </select>
-  <select id="getPlanItem" resultType="PlanItem">
-    SELECT * FROM planitem WHERE plan_no = #{no}
-  </select>
-  <select id="getPlanByPlanItem" resultType="PlanResponseDTO">
-  	SELECT * FROM plan JOIN planitem on plan.no = planitem.plan_no WHERE plan.no = #{no}
-  </select>
-
-  <insert id="insertPlan" useGeneratedKeys="true" keyProperty="no">
-    INSERT INTO plan (title, start_date, end_date, reg_date, user_no)
-    VALUES (#{title}, #{startDate}, #{endDate}, now(), #{userNo})
-  </insert>
-  <insert id="insertPlanItem">
-    INSERT INTO planItem (plan_date, day, place, lat, lng, memo, plan_sort, reg_date, plan_no)
-    VALUES (#{planDate}, #{day}, #{place}, #{lat}, #{lng}, #{memo}, #{planSort}, now(), #{planNo})
-  </insert>
-  
-  <update id="updatePlan">
-  	UPDATE plan SET title= #{title}, start_date= #{startDate}, end_date= #{endDate} WHERE no= #{no}
-  </update>
-  <update id="updatePlanItem">
-  	UPDATE planItem SET plan_date= #{planDate}, place= #{place}, lat= #{lat}, lng= #{lng}, memo= #{memo}, plan_sort= #{planSort} WHERE no= #{no} AND plan_no= #{planNo}
-  </update>
-  
-  <delete id="deletePlan">
-  	DELETE FROM plan WHERE no= #{planNo}
-  </delete>
-  <delete id="deletePlanItem">
-  	DELETE FROM planItem WHERE no= #{planItemNo}
-  </delete>
+		SELECT * FROM plan WHERE user_no = #{userNo} ORDER BY no DESC LIMIT #{info.page},#{info.size}
+	</select>
+	  <select id="getPlanByOne" resultType="Plan">
+	    SELECT * FROM plan WHERE no = #{no}
+	</select>
+	<select id="getPlanItem" resultType="PlanItem">
+	    SELECT * FROM planitem WHERE plan_no = #{no}
+	</select>
+	<select id="getPlanByPlanItem" resultType="PlanResponseDTO">
+	  	SELECT * FROM plan JOIN planitem on plan.no = planitem.plan_no WHERE plan.no = #{no}
+	</select>
+	
+	<insert id="insertPlan" useGeneratedKeys="true" keyProperty="no">
+	    INSERT INTO plan (title, start_date, end_date, reg_date, user_no)
+	    VALUES (#{title}, #{startDate}, #{endDate}, now(), #{userNo})
+	</insert>
+	<insert id="insertPlanItem">
+	    INSERT INTO planItem (plan_date, day, place, lat, lng, memo, plan_sort, reg_date, plan_no)
+	    VALUES (#{planDate}, #{day}, #{place}, #{lat}, #{lng}, #{memo}, #{planSort}, now(), #{planNo})
+	</insert>
+	  
+	<update id="updatePlan">
+	  	UPDATE plan SET title= #{title}, start_date= #{startDate}, end_date= #{endDate} WHERE no= #{no}
+	</update>
+	<update id="updatePlanItem">
+	  	UPDATE planItem SET plan_date= #{planDate}, place= #{place}, lat= #{lat}, lng= #{lng}, memo= #{memo}, plan_sort= #{planSort} WHERE no= #{no} AND plan_no= #{planNo}
+	</update>
+	  
+	<delete id="deletePlan">
+	  	DELETE FROM plan WHERE no= #{planNo}
+	</delete>
+	<delete id="deletePlanItem">
+	  	DELETE FROM planItem WHERE no= #{planItemNo}
+	</delete>
 
 </mapper>
 

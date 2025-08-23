@@ -1,6 +1,6 @@
 package com.travel.controller;
 
-import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -14,13 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.travel.domain.Plan;
+import com.travel.domain.PlanRequestDTO;
 import com.travel.domain.PlanResponseDTO;
-import com.travel.domain.PlanShare;
 import com.travel.service.EmailService;
 import com.travel.service.PlanService;
-
-import jakarta.mail.MessagingException;
 
 
 @RestController
@@ -61,9 +58,10 @@ public class PlanController {
 	}
 	
 	// plan 조회
-	@GetMapping("/list")
-	public List<Plan> getPlan() {
-		return planservice.getPlan();
+	@PostMapping("/list")
+	public Map<String,Object> getPlan(@RequestBody PlanRequestDTO planrequestdto) {
+		
+		return planservice.getPlan(planrequestdto);
 	}
 		
 	// plan,planitem 상세 조회
