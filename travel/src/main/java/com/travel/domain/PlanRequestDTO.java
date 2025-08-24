@@ -3,10 +3,17 @@ package com.travel.domain;
 public class PlanRequestDTO {
 	private int page;
 	private int size;
+	private int nowPage;
 	private String keyword;
 	private int sort;
 	private int totalPage;
 	
+	public int getNowPage() {
+		return nowPage;
+	}
+	public void setNowPage(int nowPage) {
+		this.nowPage = nowPage;
+	}
 	public int getTotalPage() {
 		return totalPage;
 	}

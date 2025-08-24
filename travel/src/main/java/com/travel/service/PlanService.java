@@ -33,15 +33,12 @@ public class PlanService {
 	}
 	
 	public Map<String, Object> getPlan(PlanRequestDTO planrequestdto){
-		
-		System.out.println(planrequestdto.getPage());
 		int userNo = getUserNo();
 		int totalCount = planmapper.getPlanAllCount(userNo);
 		
-		
 		planrequestdto.setTotalPage((totalCount + planrequestdto.getSize() -1) / planrequestdto.getSize());
-		
-		planrequestdto.setPage((planrequestdto.getPage())* planrequestdto.getSize());
+		planrequestdto.setNowPage(planrequestdto.getPage());
+		planrequestdto.setPage(planrequestdto.getPage()*planrequestdto.getSize());
 		
 		Map<String, Object> result = new HashMap<>();
 		result.put("planList", planmapper.getPlan(userNo,planrequestdto));
