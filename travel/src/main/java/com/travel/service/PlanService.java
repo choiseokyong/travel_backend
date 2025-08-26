@@ -79,6 +79,7 @@ public class PlanService {
 		prDTO.setStartDate(plan.getStartDate());
 		prDTO.setEndDate(plan.getEndDate());
 		prDTO.setUserNo(plan.getUserNo());
+		prDTO.setMemo(plan.getMemo());
 		
 		List<PlanItem> planItem = planmapper.getPlanItem(planNo);
 		prDTO.setItem(planItem);
@@ -143,6 +144,7 @@ public class PlanService {
 		plan.setStartDate(planresponsedto.getStartDate());
 		plan.setEndDate(planresponsedto.getEndDate());
 		plan.setUserNo(planresponsedto.getUserNo());
+		plan.setMemo(planresponsedto.getMemo());
 		
 		return plan;
 	}

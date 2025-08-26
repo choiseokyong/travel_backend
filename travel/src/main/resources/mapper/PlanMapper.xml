@@ -30,19 +30,19 @@
 	</select>
 	
 	<insert id="insertPlan" useGeneratedKeys="true" keyProperty="no">
-	    INSERT INTO plan (title, start_date, end_date, reg_date, user_no)
-	    VALUES (#{title}, #{startDate}, #{endDate}, now(), #{userNo})
+	    INSERT INTO plan (title, start_date, end_date, reg_date, user_no, memo)
+	    VALUES (#{title}, #{startDate}, #{endDate}, now(), #{userNo}, #{memo})
 	</insert>
 	<insert id="insertPlanItem">
-	    INSERT INTO planItem (plan_date, day, place, lat, lng, memo, plan_sort, reg_date, plan_no)
-	    VALUES (#{planDate}, #{day}, #{place}, #{lat}, #{lng}, #{memo}, #{planSort}, now(), #{planNo})
+	    INSERT INTO planItem (day, place, lat, lng, memo, plan_sort, reg_date, plan_no)
+	    VALUES (#{day}, #{place}, #{lat}, #{lng}, #{memo}, #{planSort}, now(), #{planNo})
 	</insert>
 	  
 	<update id="updatePlan">
-	  	UPDATE plan SET title= #{title}, start_date= #{startDate}, end_date= #{endDate} WHERE no= #{no}
+	  	UPDATE plan SET title= #{title}, start_date= #{startDate}, end_date= #{endDate}, memo=#{memo} WHERE no= #{no}
 	</update>
 	<update id="updatePlanItem">
-	  	UPDATE planItem SET plan_date= #{planDate}, place= #{place}, lat= #{lat}, lng= #{lng}, memo= #{memo}, plan_sort= #{planSort} WHERE no= #{no} AND plan_no= #{planNo}
+	  	UPDATE planItem SET  place= #{place}, lat= #{lat}, lng= #{lng}, memo= #{memo}, plan_sort= #{planSort} WHERE no= #{no} AND plan_no= #{planNo}
 	</update>
 	  
 	<delete id="deletePlan">

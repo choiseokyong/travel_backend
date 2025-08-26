@@ -118,7 +118,7 @@ public class JwtTokenProvider {
     // 토큰 생성 - 로그인 시 생성
     public String generateToken(Authentication authentication) {
         User userPrincipal = (User) authentication.getPrincipal();
-        System.out.println("여기야");
+        
      // 권한 문자열 리스트 추출
         List<String> roles = userPrincipal.getAuthorities().stream()
                 .map(authority -> authority.getAuthority())  // "ROLE_USER", "ROLE_ADMIN" 등

@@ -7,6 +7,15 @@ public class Plan {
 	private String endDate;
 	private String regDate;
 	private int userNo; // 유저번호
+	private String memo;
+	
+	
+	public String getMemo() {
+		return memo;
+	}
+	public void setMemo(String memo) {
+		this.memo = memo;
+	}
 	public Integer getNo() {
 		return no;
 	}

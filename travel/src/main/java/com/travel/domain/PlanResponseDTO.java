@@ -9,8 +9,17 @@ public class PlanResponseDTO {
 	private String endDate;
 	private String regDate;
 	private int userNo; // 유저번호
+	private String memo;
 	private List<PlanItem> item;
 	
+	
+	
+	public String getMemo() {
+		return memo;
+	}
+	public void setMemo(String memo) {
+		this.memo = memo;
+	}
 	public Integer getNo() {
 		return no;
 	}
